@@ -1,12 +1,16 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from .models import Comment, Follow, Group, Post, User
-from rest_framework.validators import UniqueTogetherValidator
-from django.core.exceptions import ValidationError
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+    author = serializers.SlugRelatedField(
+        many=False,
+        read_only=True,
+        slug_field='username'
+    )
 
     class Meta:
         fields = ('id', 'text', 'author', 'pub_date')
@@ -14,7 +18,11 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+    author = serializers.SlugRelatedField(
+        many=False,
+        read_only=True,
+        slug_field='username'
+    )
 
     class Meta:
         fields = ('id', 'author', 'post', 'text', 'created')
@@ -22,7 +30,11 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+    author = serializers.SlugRelatedField(
+        many=False,
+        read_only=True,
+        slug_field='username'
+    )
 
     class Meta:
         fields = '__all__'
